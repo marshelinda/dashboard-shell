@@ -58,3 +58,105 @@ document.querySelector("#btn-greet-unsafe").addEventListener("click", () => {
 document.querySelector("#btn-greet-safe").addEventListener("click", () => { 
   greetingOutput.textContent = "Hello, " + visitorNameInput.value + "!"; 
 });
+
+async function fetchUsers() { 
+const response = await fetch("https://jsonplaceholder.typicode.com/users"); 
+const data = await response.json(); 
+console.log(data); 
+} 
+fetchUsers();
+
+const stateLoading = document.querySelector("#state-loading"); 
+const stateEmpty = document.querySelector("#state-empty"); 
+const stateError = document.querySelector("#state-error"); 
+const userList = document.querySelector("#user-list"); 
+  
+function showState(state) { 
+  stateLoading.hidden = state !== "loading"; 
+  stateEmpty.hidden = state !== "empty"; 
+  stateError.hidden = state !== "error"; 
+  userList.hidden = state !== "success"; 
+} 
+
+function renderUsers(data) { 
+  userList.textContent = ""; 
+  
+  data.forEach((user) => { 
+    const li = document.createElement("li"); 
+    li.textContent = user.name + " — " + user.email; 
+    userList.appendChild(li); 
+  }); 
+} 
+
+// Load users with optional query parameter
+async function loadUsers(query = "") { 
+  showState("loading"); 
+  
+  try { 
+    const url = "https://jsonplaceholder.typicode.com/users" + 
+      (query ? "?username=" + encodeURIComponent(query) : ""); 
+    const response = await fetch(url); 
+  
+    if (!response.ok) { 
+      throw new Error("HTTP status: " + response.status); 
+    } 
+  
+    const data = await response.json(); 
+  
+    if (data.length === 0) { 
+      showState("empty"); 
+      return; 
+    } 
+  
+    renderUsers(data); 
+    showState("success"); 
+  } catch (error) { 
+    console.error("Failed to load data:", error); 
+    showState("error"); 
+  } 
+} 
+
+document.querySelector("#btn-load-users").addEventListener("click", () => { 
+  loadUsers(); 
+}); 
+  
+document.querySelector("#search-username").addEventListener("input", (event) => { 
+  loadUsers(event.target.value.trim()); 
+}); 
+
+// Simulate error
+async function loadUsersBroken() { 
+  showState("loading"); 
+  try { 
+    const response = await fetch("https://jsonplaceholder.typicode.com/no-such-user"); 
+  
+    if (!response.ok) { 
+      throw new Error("HTTP status: " + response.status); 
+    } 
+  
+    const data = await response.json(); 
+    renderUsers(data); 
+    showState("success"); 
+  } catch (error) { 
+    console.error("Failed to load data:", error); 
+    showState("error"); 
+  } 
+} 
+  
+document.querySelector("#btn-simulate-error").addEventListener("click", () => { 
+  loadUsersBroken(); 
+});
+
+// CORS demo
+document.querySelector("#btn-cors-demo").addEventListener("click", async () => { 
+showState("loading"); 
+try { 
+const response = await fetch("https://www.google.com"); 
+const data = await response.text(); 
+console.log(data); 
+showState("success"); 
+} catch (error) { 
+console.error("Failed (likely CORS):", error); 
+showState("error"); 
+} 
+}); 

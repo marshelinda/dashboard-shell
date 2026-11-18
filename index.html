@@ -38,12 +38,27 @@
         <button id="btn-refresh">Refresh Data</button> 
       </section> 
       <section class="greeting-demo" aria-label="Visitor greeting demo"> 
-      <h2>Visitor Greeting (Demo)</h2> 
+        <h2>Visitor Greeting (Demo)</h2> 
         <input type="text" id="visitor-name" placeholder="Type your name..."> 
         <button id="btn-greet-unsafe">Show (Unsafe)</button> 
         <button id="btn-greet-safe">Show (Safe)</button> 
         <div id="greeting-output"></div> 
+      </section>
+      <br />
+      <section class="api-demo" aria-label="User list from an external API"> 
+        <h2>User List (External API)</h2> 
+        <div class="api-controls"> 
+          <input type="text" id="search-username" placeholder="Search by username..."> 
+          <button id="btn-load-users">Load Data</button> 
+          <button id="btn-simulate-error">Simulate Failure</button> 
+          <button id="btn-cors-demo">CORS Failure Demo</button> 
+        </div> 
+        <p id="state-loading" class="state-message" hidden>Loading data...</p> 
+        <p id="state-empty" class="state-message" hidden>No users found.</p> 
+        <p id="state-error" class="state-message" hidden>Failed to load data. Try again.</p> 
+        <ul id="user-list"></ul> 
       </section>      
+      <br />
       <section class="chart-placeholder"> 
         Chart will be displayed here (Session 11) 
       </section> 
